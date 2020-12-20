@@ -2,10 +2,10 @@ import React,{} from 'react';
 import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle } from 'reactstrap';
 import "bootstrap/dist/css/bootstrap.min.css";
 
-    function RenderMenuItem({ dish, onClick}){
+    function RenderMenuItem({ dish }){
 
         return(
-            <Card onClick={() => onClick(dish.id)}>      
+            <Card>      
                 <CardImg width="100%" src={dish.image} alt={dish.name} />
                 <CardImgOverlay>
                     <CardTitle>{dish.name}</CardTitle>
@@ -35,9 +35,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
             </div>
         );        
     }
-       
-    //Changing into functional component
-
+     
+// applying router
+//    function RenderMenuItem({ dish, onClick}){
+//       <Card onClick={() => onClick(dish.id)}>      
+    
+//Changing into functional component
 //class Menu extends Component {
     // componentDidMount(){
     //     console.log('Menu Component componentDidMount invoked')
