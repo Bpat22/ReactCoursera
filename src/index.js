@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free';
+import 'bootstrap-social/bootstrap-social.css';
+
 // Put any other imports below so that CSS from your
 // components takes precedence over default styles.
 

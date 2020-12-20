@@ -24,7 +24,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
             );
         });
 
-        console.log('Menu Componenet render is invonked');
+        console.log('Menu Component render is invonked');
 
         return ( 
             <div className="container">
