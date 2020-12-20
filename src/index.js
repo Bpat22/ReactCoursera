@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free';
+import '../node_modules/font-awesome/css/font-awesome.min.css'; 
+
 import 'bootstrap-social/bootstrap-social.css';
 
 // Put any other imports below so that CSS from your
