@@ -1,65 +1,70 @@
-import React, { } from 'react';
-import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle } from 'reactstrap';
+import React from 'react';
+import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, BreadcrumbItem, Breadcrumb } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
     function RenderDish ({dish}) {
-
-        if(dish != null){
-            return(
-            <React.Fragment>
-            <div className = "col-12 col-md-5 m-1">
-                <card>
-                    <CardImg width="100%" src={dish.image} alt={dish.name} />
+        return(
+            <div className="col-12 col-md-5 m-1">
+                <Card>
+                    <CardImg width="100%" top src={dish.image} atl={dish.name} />
                     <CardBody>
-                            <CardTitle>{dish.name}</CardTitle>
-                            <CardText>{dish.description}</CardText>
+                        <CardTitle>{dish.name}</CardTitle>
+                        <CardText>{dish.description}</CardText>
                     </CardBody>
-                </card>
+                </Card>
             </div>
+        );
+    }
 
-            <div className = "col-12 col-md-5 m-1" >
+    function RenderComments ({comments}){
+        //const RenderComments = (comments) => {
+        if (comments != null)
+
+        return(
+            <React.Fragment>
+            <div className="col-12 col-md-5 m-1">
                 <h4>Comments</h4>
-                    <RenderComments comments = {dish.comments} />   
-              </div>     
-            </React.Fragment>
-            )
-        } else {
-            return(<div></div>)
-        }
-    }
-    function RenderComments ({comments}) {
-        if(comments != null){
-            const com = comments.map(co => {
-
-                return (
-                    <React.Fragment>
-                        <li>{co.comment}</li><br></br>
-                        <li>--{co.author}, {formatDate(co.date)}</li><br></br>
-                    </React.Fragment>
-                )
-            });
-            return (
                 <ul className = "list-unstyled">
-                    {com}
+                    {comments.map((comment) => {
+                        return (
+                            <li key={comment.id}>
+                            <p>{comment.comment}</p> 
+                            <p>--{comment.author}, {formatDate(comment.date)}</p>   
+                            </li>
+                        );                    
+                    })}
                 </ul>
-            )
-        }else {
-            return (<div></div>)
-        }
+            </div>
+            </React.Fragment>
+        );
+        else
+            return(
+            <div></div>
+            );         
     }
 
-    const DishDetail = (props) => {    
-        console.log('Dishdetail Component render invoked')    
-           const {dish} = props;
-           return(
-               <div class="container">
-               <div className = "row">
-                   <RenderDish dish = {props.dish} />
-                   {/* <RenderComments comments = {props.dish.comments} */}
-               </div>
-               </div>
-           );
-       }    
+    const DishDetail = (props) => {
+        if (props.dish != null)
+        return(
+            <div class="container">
+                <div className="row">
+                    <Breadcrumb>
+                    <BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
+                    <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{props.dish.name}</h3>
+                        <hr />
+                    </div>
+                </div>
+                <div className="row">
+                    <RenderDish dish={props.dish} />
+                    <RenderComments comments={props.comments} />
+                </div>    
+            </div>
+        );
+    }
 
     const formatDate = (date) => {
         const option = {year: 'numeric', month: 'short', day: 'numeric' };
@@ -68,16 +73,4 @@ import "bootstrap/dist/css/bootstrap.min.css";
         return newDate;
     }
 
-
-// class DishDetail extends Component{
-//     componentDidMount(){
-//         console.log('Dishdetail Component componentDidMount invoked')
-//     }
-//     componentDidUpdate(){
-//         console.log('Dishdetail Component componentDidUpdate invoked')
-//     }
-// }
-//{ this.renderComments(dish.comments) } 
-// <RenderComments comments = {props.dish.comments} />   
-//{ this.renderComments(dish.comments) } 
-export default DishDetail;
+    export default DishDetail;
