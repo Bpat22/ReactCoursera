@@ -1,24 +1,69 @@
 import React, { Component } from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, 
     Modal, ModalBody, ModalHeader,
-    Button, Row, Label, Input, Col, BreadcrumbItem, Breadcrumb } from 'reactstrap';
+    Button, Row, Label, Col, BreadcrumbItem, Breadcrumb } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import { Control, LocalForm, Errors } from 'react-redux-form';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => (val) && (val.length >= len);
 
+function RenderDish({ dish }) {
+    return (
+        <div className="col-12 col-md-5 m-1">
+        <Card>
+            <CardImg top src={dish.image} alt={dish.name} />
+            <CardBody>
+                <CardTitle>{dish.name}</CardTitle>
+                <CardText>{dish.description}</CardText>
+            </CardBody>
+        </Card>
+        </div>
+    );
+}    
+
+function RenderComments({ comments, addComment, dishId }) {
+    if (comments != null) {
+        return (
+        <div className="col-12 col-md-5 m-1">
+            <h4>Comments</h4>
+            <ul className="list-unstyled">
+                {comments.map((comment) => {
+                    return (
+                <li className="mb-2">
+                    <p>{comment.comment}</p>
+                    <p>-- {comment.author},{new Intl.DateTimeFormat("en-US", {
+                        year: "numeric",month: "short",day: "2-digit"})
+                        .format(new Date(Date.parse(comment.date)))}</p>                
+                </li>
+                );
+                    })}
+            </ul>
+            <CommentForm  dishId={dishId} addComment={addComment} />
+        </div>
+        );
+    } else 
+        return (
+            <div></div>
+    );
+} 
+
 class CommentForm extends Component {
 
     constructor(props){
-        super(props)
-
-        this.state = { isModalOpen: false };
+        super(props);
 
         this.toggleModal = this.toggleModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = { 
+            isNavOpen: false,
+            isModalOpen: false 
+            
+        };
+
     }
 
     toggleModal() {
@@ -27,9 +72,8 @@ class CommentForm extends Component {
 
     handleSubmit(values){
         this.toggleModal();
-
-        console.log('comment:', values);
-        alert('comment:' + JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+        
     }
 
     render() {
@@ -43,15 +87,9 @@ class CommentForm extends Component {
                 <ModalBody>
                 <LocalForm onSubmit={this.handleSubmit}>
                     <Row className="form-group">
-                    <Label htmlFor="rating" md={12}>
-                        Rating
-                    </Label>
+                    <Label htmlFor="rating" md={12}>Rating</Label>
                     <Col md={{ size: 12 }}>
-                        <Control.select
-                        model=".rating"
-                        name="rating"
-                        className="form-control"
-                    >
+                        <Control.select model=".rating" name="rating" className="form-control">
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -61,9 +99,7 @@ class CommentForm extends Component {
                     </Col>
                     </Row>
                     <Row className="form-group">
-                    <Label htmlFor="author" md={12}>
-                        Your Name
-                    </Label>
+                    <Label htmlFor="author" md={12}>Your Name</Label>
                     <Col md={12}>
                         <Control.text
                         model=".author"
@@ -114,69 +150,6 @@ class CommentForm extends Component {
         }
     }    
 
-    function RenderDish({ dish }) {
-        return (
-            <div className="col-12 col-md-5 m-1">
-            <Card>
-                <CardImg top src={dish.image} alt={dish.name} />
-                <CardBody>
-                    <CardTitle>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
-            </div>
-        );
-    }    
-    
-    // function RenderComments({ comments }) {
-    //     if (comments != null) {
-    //         return (
-    //         <div className="col-12 col-md-5 m-1">
-    //             <h4>Comments</h4>
-    //             {comments.map(comment => (
-    //             <ul key={comment.id} className="list-unstyled">
-    //                 <li className="mb-2">{comment.comment}</li>
-    //                 <li>
-    //                 -- {comment.author}{" "}
-    //                 {new Intl.DateTimeFormat("en-US", {
-    //                     year: "numeric",
-    //                     month: "short",
-    //                     day: "2-digit"
-    //                 }).format(new Date(Date.parse(comment.date)))}
-    //                 </li>
-    //             </ul>
-    //             ))}
-    //             <CommentForm />
-    //         </div>
-    //         );
-    //     } else 
-    //         return 
-    //         <div></div>
-    // } 
-
-    
-    function RenderComments({comments}) {
-        var commentList = comments.map(comment => {
-            return (
-                <li key={comment.id} >
-                    {comment.comment}
-                    <br /><br />
-                    -- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}
-                    <br /><br />
-                </li>
-            );
-        });
-        return (
-            <div>
-                <h4>Comments</h4>
-                <ul className="list-unstyled">
-                    {commentList}
-                </ul>
-                <CommentForm />
-            </div>
-        );
-    }
-
 
     const DishDetail = (props) => {
         if (props.dish != null)
@@ -194,7 +167,10 @@ class CommentForm extends Component {
                 </div>
                 <div className="row">
                     <RenderDish dish={props.dish} />
-                    <RenderComments comments={props.comments} />
+                    <RenderComments comments={props.comments} 
+                        addComment = {props.addComment}
+                        dishId = {props.dish.id}
+                        />
                 </div>    
             </div>
         );
