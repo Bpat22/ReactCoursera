@@ -2,6 +2,7 @@ import React,{} from 'react';
 import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Loading } from './LoadingComponent';
 
     function RenderMenuItem({ dish, onClick }){
 
@@ -20,7 +21,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
     const Menu = (props) => {
 
-        const menu = props.dishes.map((dish) => {
+        const menu = props.dishes.dishes.map((dish) => {
             return (
                 <div key={dish.id} className="col-12 col-md-5 m-1">
                     <RenderMenuItem dish={dish} />
@@ -28,7 +29,26 @@ import "bootstrap/dist/css/bootstrap.min.css";
             );
         });
 
-        console.log('Menu Component render is invonked');
+        if (props.dishes.isLoading) {
+            return(
+                <div className="container">
+                    <div className="row">
+                        <Loading />
+                    </div>
+                </div>
+            );
+        }
+        else if (props.dishes.errMess) {
+            return(
+                <div className="container">
+                    <div className="row">
+                        <div className="col-12">
+                            <h4>{props.dishes.errMess}</h4>
+                        </div>
+                    </div>
+                </div>
+            );            
+        }else 
 
         return ( 
             <div className="container">
@@ -45,29 +65,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
                 <div className="row">
                     {menu}
                 </div>
-                              
             </div>
         );        
     }
-     
-// applying router
-//    function RenderMenuItem({ dish, onClick}){
-//       <Card onClick={() => onClick(dish.id)}>      
     
-//Changing into functional component
-//class Menu extends Component {
-    // componentDidMount(){
-    //     console.log('Menu Component componentDidMount invoked')
-    // }
-    // constructor(props){
-    //     super(props);
-
-    //     console.log('Menu Componenet constructor is invonked');
-    // }
-   
-    //render(){
-
-    //}
-//}
-
 export default Menu;

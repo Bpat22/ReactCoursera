@@ -46,8 +46,7 @@ class Header extends Component {
                     <NavbarToggler onClick={this.toggleNav} />
 
                     <NavbarBrand className ="mr-auto" href="/">
-                        <img src = "assets/images/logo.png" height="30" width="41"
-                            atl="Ristorante Con Fusion" />
+                        <img src = "assets/images/logo.png" height="30" width="41" atl="Ristorante Con Fusion" />
                     </NavbarBrand>
 
                     <Collapse isOpen={this.state.isNavOpen} navbar>
@@ -114,7 +113,7 @@ class Header extends Component {
                                     Remember me
                                 </Label>
                             </FormGroup>
-                            <Button type="submit" value="submit" color="primary">Login</Button>
+                            <Button type="submit" value="submit" color="primary" onClick={this.handleLogin}>Login</Button>
                         </Form>
                     </ModalBody>
                 </Modal>
