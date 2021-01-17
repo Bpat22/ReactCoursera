@@ -1,32 +1,49 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Loading } from './LoadingComponent';
+import { FadeTransform } from 'react-animation-components';
+import { baseUrl } from '../shared/baseUrl';
 
-const RenderLeader = (props) => {
+
+function RenderLeader ({ leader, isLoading, errMess}) {
+    if (isLoading){
+        return (
+            <Loading />
+        );
+    }else if (errMess){
+        return (
+            <h4>{errMess}</h4>
+        );
+    }else
+
     return(
+        <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
         <Media tag = "li">
             <Media left middle>
-                <Media object src={props.leader.image} alt = {props.leader.name} />
+                <Media object src={baseUrl + leader.image} alt = {leader.name} />
             </Media>
-
             <Media body className = "ml-5">
-                <Media heading>{props.leader.name}</Media>
-                <p>{props.leader.designation}</p>
-                <p>{props.leader.description}</p>
+                <Media heading>{leader.name}</Media>
+                <p>{leader.designation}</p>
+                <p>{leader.description}</p>
             </Media>
         </Media>
+        </FadeTransform>
     );
 }
 
-function About(props) {
+function About (props) {
 
-    const leaders = props.leaders.map((leader) => {
+    const leaders = props.leaders.leaders.map((leader) => {
         return (
             <React.Fragment>
                 <RenderLeader leader={leader}/><br />
             </React.Fragment>
-            //<p>Leader {leader.name}</p>
-           
         );
     });
 
